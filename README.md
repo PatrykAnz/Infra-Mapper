@@ -22,3 +22,8 @@ Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem us
 | Presentation   | React + Vite               | Azure Static Web Apps           |
 | Application    | API (Node.js 24, NestJS)   | Azure App Service               |
 | Data           | PostgreSQL                 | Azure Database for PostgreSQL   |
+
+## Status Projektu
+
+* [x] **Artefakt 1:** Architektura i struktura folderów.
+* [x] **Artefakt 2:** Środowisko wielokontenerowe uruchomione lokalnie (Docker Compose).
