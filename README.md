@@ -1,3 +1,24 @@
 # Infra-Mapper
-Web application for visualizing infrastructure devices, their locations and connections.
-# Infra-Mapper
+
+Patryk Anz – 96160
+
+Projekt natywnej aplikacji chmurowej do wizualizacji urządzeń infrastruktury, ich lokalizacji oraz połączeń.
+
+## Stos technologiczny
+
+- Presentation Layer: React + Vite
+- Application Layer: Node.js 24 + NestJS (REST API)
+- Data Layer: PostgreSQL / Azure Database for PostgreSQL
+- Konteneryzacja: Docker
+- Chmura: Microsoft Azure
+
+
+## Deklaracja Architektury 
+
+Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem usług PaaS w Microsoft Azure.
+
+| Warstwa        | Komponent lokalny          | Usługa Azure                    |
+|----------------|----------------------------|---------------------------------|
+| Presentation   | React + Vite               | Azure Static Web Apps           |
+| Application    | API (Node.js 24, NestJS)   | Azure App Service               |
+| Data           | PostgreSQL                 | Azure Database for PostgreSQL   |
