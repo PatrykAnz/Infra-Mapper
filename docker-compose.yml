@@ -1,0 +1,48 @@
+services:
+  database:
+    image: postgres:18
+    container_name: infra-mapper-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: infra_mapper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  backend:
+    build:
+      context: ./backend
+    container_name: infra-mapper-backend
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: infra_mapper
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: infra-mapper-frontend
+    restart: unless-stopped
+    environment:
+      PORT: 5173
+      HOST: 0.0.0.0
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    name: infra-mapper_postgres_data
