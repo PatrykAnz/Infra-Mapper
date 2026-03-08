@@ -1,4 +1,5 @@
 # Infra-Mapper
+## School project
 
 PatrykAnz – 96160
 
