@@ -32,14 +32,12 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:3000
     container_name: infra-mapper-frontend
     restart: unless-stopped
-    environment:
-      PORT: 5173
-      HOST: 0.0.0.0
-      VITE_API_URL: http://localhost:3000
     ports:
-      - "5173:5173"
+      - "8080:80"
     depends_on:
       - backend
 
