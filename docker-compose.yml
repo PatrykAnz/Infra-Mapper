@@ -1,46 +1,40 @@
+version: "3.9"
 services:
-  database:
-    image: postgres:18
-    container_name: infra-mapper-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: infra_mapper
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql
-
-  backend:
-    build:
-      context: ./backend
-    container_name: infra-mapper-backend
-    restart: unless-stopped
-    environment:
-      PORT: 3000
-      DB_HOST: database
-      DB_PORT: 5432
-      DB_NAME: infra_mapper
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-    ports:
-      - "3000:3000"
-    depends_on:
-      - database
-
+  #Warstwa Prezentacji(React)
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_API_URL: http://localhost:3000
-    container_name: infra-mapper-frontend
-    restart: unless-stopped
+    build: ./frontend
+    container_name: cloud-frontend
     ports:
       - "8080:80"
+    networks:
+      - cloud-network
     depends_on:
       - backend
-
-volumes:
-  postgres_data:
-    name: infra-mapper_postgres_data
+  #Warstwa Logiki(.NET 9)
+  backend:
+    build: ./backend
+    container_name: cloud-backend
+    ports:
+      - "8081:8080" # Mapujemy port 8080 kontenera (standard .NET 9) na 8081hosta
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+      # UWAGA: Hasło w tekście jawnym zostanie zabezpieczone później, ale dla celów demonstracyjnych jest tutaj umieszczone. W praktyce należy używać zmiennych środowiskowych lub menedżerów sekretów.
+      - ConnectionStrings__DefaultConnection=Server=cloud-db;Database=CloudAppDb;User Id=sa;Password=StrongPassword123!;TrustServerCertificate=True
+    networks:
+      - cloud-network
+    depends_on:
+      - cloud-db
+  #Warstwa Danych (SQL Edge)
+  cloud-db:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: cloud-db
+    environment:
+      SA_PASSWORD: "StrongPassword123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - cloud-network
+networks:
+  cloud-network:
+    driver: bridge

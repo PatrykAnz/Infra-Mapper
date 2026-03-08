@@ -1,0 +1,6 @@
+@Infra_Mapper_HostAddress = http://localhost:5117
+
+GET {{Infra_Mapper_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

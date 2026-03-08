@@ -1,8 +1,13 @@
-FROM node:25-alpine
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install --production
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
 COPY . .
-ENV PORT=3000
-EXPOSE 3000
-CMD ["npm", "start"]
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish
+
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 80
+# Nazwa pliku.dllmusiodpowiadaćnazwieTwojegoprojektu
+ENTRYPOINT ["dotnet", "Infra-Mapper.dll"]
