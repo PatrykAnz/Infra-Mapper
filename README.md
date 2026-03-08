@@ -29,3 +29,4 @@ Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem us
 * [x] **Artefakt 1:** Architektura i struktura folderów.
 * [x] **Artefakt 2:** Środowisko wielokontenerowe uruchomione lokalnie (Docker Compose).
 * [x] **Artefakt 3:** Docker Compose environment for frontend
+* [x] **Artefakt 4:** Dzialajaca warstwa logiki backendu 
