@@ -1,6 +1,6 @@
 # Infra-Mapper
 
-Patryk Anz – 96160
+PatrykAnz – 96160
 
 Projekt natywnej aplikacji chmurowej do wizualizacji urządzeń infrastruktury, ich lokalizacji oraz połączeń.
 
@@ -27,3 +27,4 @@ Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem us
 
 * [x] **Artefakt 1:** Architektura i struktura folderów.
 * [x] **Artefakt 2:** Środowisko wielokontenerowe uruchomione lokalnie (Docker Compose).
+* [x] **Artefakt 3:** Docker Compose environment for frontend
