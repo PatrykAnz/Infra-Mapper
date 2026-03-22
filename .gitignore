@@ -16,3 +16,20 @@ pnpm-debug.log*
 .vscode/
 .idea/
 .DS_Store
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.cache
+backend/bin
+backend/obj
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
