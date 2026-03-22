@@ -10,8 +10,13 @@ builder.Services.AddControllers();
 // 2. Dokumentacja API (Swagger/OpenAPI)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// 3. Pobranie Connection Stringa (zmiennej środowiskowej z Dockera)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// 3. PobranieConnection Stringa(zmiennejśrodowiskowejz Dockera)
+// Najpierwszukajw zmiennychśrodowiskowych(Docker),
+// a jeśli tam nie ma (lokalnyterminal), weźz appsettings.json
+var connectionString= Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+?? builder.Configuration.GetConnectionString("DefaultConnection");
+ 
+
 // 4. Rejestracja bazy danych MS SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -36,13 +41,14 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<AppDbContext>();
         // 1. Tworzy bazę i tabele, jeśli ich nie ma
-        context.Database.EnsureCreated();
+        // context.Database.EnsureCreated();
         // 2. Dodaje startowe dane, jeśli tabela jestpusta (opcjonalne, alefajne)
         if (!context.Tasks.Any())
         {
             context.Tasks.AddRange(
-                new CloudTask { Name = "Zrobić kawę", IsCompleted = true },
-                new CloudTask { Name = "Uruchomić projekt w Dockerze", IsCompleted = false }
+                new CloudTask { Name = "Router", IsCompleted = true },
+                new CloudTask { Name = "Komputer", IsCompleted = true },
+                new CloudTask { Name = "Termometr IoT", IsCompleted = false }
             );
             context.SaveChanges();
         }
