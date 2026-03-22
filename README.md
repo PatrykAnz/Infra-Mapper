@@ -24,9 +24,22 @@ Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem us
 | Application    | API (Node.js 24, NestJS)   | Azure App Service               |
 | Data           | PostgreSQL                 | Azure Database for PostgreSQL   |
 
-## Status Projektu
+## 🚦 Status Projektu
 
 * [x] **Artefakt 1:** Architektura i struktura folderów.
 * [x] **Artefakt 2:** Środowisko wielokontenerowe uruchomione lokalnie (Docker Compose).
 * [x] **Artefakt 3:** Docker Compose environment for frontend
-* [x] **Artefakt 4:** Dzialajaca warstwa logiki backendu 
+* [x] **Artefakt 4:** Działająca warstwa logiki backendu
+* [x] **Artefakt 5:** Trwałość danych i profesjonalny kontrakt API (EF Migrations + DTO + UI Form).
+
+## 🚀 Quick Start (Local EF)
+
+Jeśli uruchamiasz projekt po raz pierwszy z bazą danych, wykonaj w terminalu:
+
+**Uruchomienie infrastruktury:**
+
+```bash
+docker compose up -d
+cd backend
+dotnet ef database update
+```
