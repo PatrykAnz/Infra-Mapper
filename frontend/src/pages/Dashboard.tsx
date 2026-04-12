@@ -44,7 +44,7 @@ const Dashboard = () => {
   };
   return (
 <div style={{ padding: '20px', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
-<h1>☁️ Infra-Mapper Dashboard</h1>
+<h1 className="dashboard-title">☁️ Infra-Mapper Dashboard</h1>
       {/* Komunikat o błędzie */}
       {error && (
 <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', borderRadius: '5px', margin: '20px auto', maxWidth: '400px' }}>
