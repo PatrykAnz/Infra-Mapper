@@ -1,45 +1,20 @@
 # Infra-Mapper
-## School project
 
-PatrykAnz – 96160
+**PatrykAnz · 96160**
 
-Projekt natywnej aplikacji chmurowej do wizualizacji urządzeń infrastruktury, ich lokalizacji oraz połączeń.
+**Infra-Mapper** is a cloud-oriented full-stack application: a **React** (Vite) client calls an **ASP.NET Core** API to **list, add, toggle completion, and delete tasks** persisted in **SQL Server**. Routes live under **`/api/tasks`**; the API ships **OpenAPI (Swagger)**. The repo includes **Docker Compose** for local runs and targets **Microsoft Azure** (App Service for UI and API, Azure SQL, Key Vault with managed identity where configured, **GitHub Actions** for frontend deployment).
 
-## Stos technologiczny
+The architecture is **cloud-native** in spirit: **PaaS** on Azure for hosting and supporting services.
 
-- Presentation Layer: React + Vite
-- Application Layer: Node.js 24 + NestJS (REST API)
-- Data Layer: PostgreSQL / Azure Database for PostgreSQL
-- Konteneryzacja: Docker
-- Chmura: Microsoft Azure
+## Layered architecture
 
+| Layer | Repository / local component | Azure service |
+|-------|------------------------------|---------------|
+| **Presentation** | React, TypeScript, Vite (single-page application) | **Azure App Service** (Linux, Node.js 24 LTS) — static production build served from the Web App |
+| **Application** | ASP.NET Core 9 Web API, Entity Framework Core, OpenAPI (Swagger) | **Azure App Service** (Linux, .NET 9) |
+| **Data** | SQL Server, EF Core migrations | **Azure SQL Database** (logical server and database in resource group `rg-cloud-infra-mapper`) |
+| **Configuration & secrets** | Azure.Identity, Key Vault configuration provider, optional Docker Compose for local SQL Edge | **Azure Key Vault** (`kv-infra-mapper`), accessed via **managed identity** and RBAC where configured |
+| **Delivery** | GitHub Actions workflow (`.github/workflows/`) | Deployment to the frontend Web App; OIDC and Azure AD app registration for CI authentication |
+| **Quality** | xUnit test project (`TaskManager.Tests`) | — |
 
-## Deklaracja Architektury 
-
-Ten projekt został zaplanowany w architekturze cloud-native z wykorzystaniem usług PaaS w Microsoft Azure.
-
-| Warstwa        | Komponent lokalny          | Usługa Azure                    |
-|----------------|----------------------------|---------------------------------|
-| Presentation   | React + Vite               | Azure Static Web Apps           |
-| Application    | API (Node.js 24, NestJS)   | Azure App Service               |
-| Data           | PostgreSQL                 | Azure Database for PostgreSQL   |
-
-## 🚦 Status Projektu
-
-* [x] **Artefakt 1:** Architektura i struktura folderów.
-* [x] **Artefakt 2:** Środowisko wielokontenerowe uruchomione lokalnie (Docker Compose).
-* [x] **Artefakt 3:** Docker Compose environment for frontend
-* [x] **Artefakt 4:** Działająca warstwa logiki backendu
-* [x] **Artefakt 5:** Trwałość danych i profesjonalny kontrakt API (EF Migrations + DTO + UI Form).
-
-## 🚀 Quick Start (Local EF)
-
-Jeśli uruchamiasz projekt po raz pierwszy z bazą danych, wykonaj w terminalu:
-
-**Uruchomienie infrastruktury:**
-
-```bash
-docker compose up -d
-cd backend
-dotnet ef database update
-```
+The presentation tier is implemented as a **static front-end bundle** deployed to a **Node-based App Service**. That differs from the standalone **Azure Static Web Apps** product, which is not used in this repository’s current Azure footprint.
