@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [newTaskName, setNewTaskName] = useState(""); 
   // 1. Funkcja pobierająca zadania - zdefiniowana osobno, by móc ją wywołać wielokrotnie
   const fetchTasks = () => {
-    api.get('/tasks')
+    api.get('/api/tasks')
       .then((res: any) => {
         setItems(res.data);
       })
@@ -32,7 +32,7 @@ const Dashboard = () => {
     if (!newTaskName.trim()) return; // Nie wysyłaj, jeśli pole jest puste
     try {
       // Wykorzystujemy nasz kontrakt API - wysyłamy tylko to, czego oczekuje TaskCreateDto
-      await api.post('/tasks', {
+      await api.post('/api/tasks', {
         name: newTaskName
       });
       setNewTaskName(""); // Czyścimy pole tekstowe dla wygody użytkownika
