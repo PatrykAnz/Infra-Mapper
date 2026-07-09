@@ -1,6 +1,35 @@
-@Infra_Mapper_HostAddress = http://localhost:5117
+@InfraMapper_HostAddress = http://localhost:5117
 
-GET {{Infra_Mapper_HostAddress}}/weatherforecast/
+GET {{InfraMapper_HostAddress}}/api/tasks
 Accept: application/json
+
+###
+
+GET {{InfraMapper_HostAddress}}/api/tasks/1
+Accept: application/json
+
+###
+
+POST {{InfraMapper_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+  "name": "new task"
+}
+
+###
+
+PUT {{InfraMapper_HostAddress}}/api/tasks/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "renamed",
+  "isCompleted": true
+}
+
+###
+
+DELETE {{InfraMapper_HostAddress}}/api/tasks/1
 
 ###
