@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
-    <RootNamespace>TaskManager.Tests</RootNamespace>
+    <RootNamespace>InfraMapper.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
