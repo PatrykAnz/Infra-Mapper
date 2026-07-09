@@ -8,6 +8,7 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 80
-# Nazwa pliku.dllmusiodpowiadaćnazwieTwojegoprojektu
-ENTRYPOINT ["dotnet", "Infra-Mapper.dll"]
+ENV ASPNETCORE_HTTP_PORTS=8080
+EXPOSE 8080
+USER $APP_UID
+ENTRYPOINT ["dotnet", "InfraMapper.dll"]

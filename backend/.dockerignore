@@ -1,0 +1,12 @@
+**/bin
+**/obj
+**/publish
+**/node_modules
+**/.vs
+**/.vscode
+**/.idea
+**/*.user
+**/*.suo
+appsettings.Development.json
+.dockerignore
+Dockerfile
