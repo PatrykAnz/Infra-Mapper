@@ -1,19 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CloudBackend.Data;
-using CloudBackend.Models;
-using CloudBackend.DTOs;
+using InfraMapper.Data;
+using InfraMapper.Models;
+using InfraMapper.DTOs;
 
-
-namespace CloudBackend.Controllers;
+namespace InfraMapper.Controllers;
 
 [ApiController]
-[Route("api/[controller]")] // Adres: http://localhost:8081/api/tasks
+[Route("api/tasks")]
 public class TasksController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    // Wstrzykiwanie zależności(Dependency Injection) kontekstu bazy danych
     public TasksController(AppDbContext context)
     {
         _context = context;
@@ -22,48 +20,48 @@ public class TasksController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TaskReadDto>>> GetAll()
     {
-        // Pobieramy encje z bazy danych
-        var tasks = await _context.Tasks.ToListAsync();
-        // Mapujemy każdą encję na obiekt DTO
-        var tasksDto = tasks.Select(t => new TaskReadDto
-        {
-            Id = t.Id,
-            Name = t.Name,
-            IsCompleted = t.IsCompleted
-        });
-        return Ok(tasksDto);
+        var tasks = await _context.Tasks
+            .AsNoTracking()
+            .Select(t => new TaskReadDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                IsCompleted = t.IsCompleted
+            })
+            .ToListAsync();
+        return Ok(tasks);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<TaskReadDto>> GetById(int id)
     {
-        var task = await _context.Tasks.FindAsync(id);
-        if (task == null) return NotFound();  // Zwracamy DTO zamiast czystej encji
-        return Ok(new TaskReadDto 
-        { 
-            Id = task.Id, 
-            Name = task.Name, 
-            IsCompleted = task.IsCompleted 
-        });
+        var task = await _context.Tasks
+            .AsNoTracking()
+            .Where(t => t.Id == id)
+            .Select(t => new TaskReadDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                IsCompleted = t.IsCompleted
+            })
+            .FirstOrDefaultAsync();
+
+        if (task == null) return NotFound();
+        return Ok(task);
     }
 
     [HttpPost]
     public async Task<ActionResult<TaskReadDto>> Create(TaskCreateDto taskDto)
     {
-        // 1. Mapowanie DTO -> Entity
-        // Przekształcamy to, co przyszło z sieci, na model bazy danych
         var newTask = new CloudTask
         {
             Name = taskDto.Name,
-            IsCompleted = false // Domyślnie nowe zadanie nie jest gotowe
+            IsCompleted = false
         };
 
-        // 2. Zapis do bazy danych
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();
 
-        // 3. Mapowanie Entity -> DTO (Zwrotka)
-        // Zwracamy TaskReadDto, który zawiera już nadane przez bazę Id
         var readDto = new TaskReadDto
         {
             Id = newTask.Id,
@@ -73,18 +71,21 @@ public class TasksController : ControllerBase
 
         return CreatedAtAction(nameof(GetById), new { id = readDto.Id }, readDto);
     }
- 
 
-    [HttpPut("{id}")] // 4. Edytuj(UPDATE)
-    public async Task<ActionResult> Update(int id, CloudTask task)
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> Update(int id, TaskReadDto taskDto)
     {
-        if (id != task.Id) return BadRequest("ID mismatch");
-        _context.Entry(task).State = EntityState.Modified;
+        if (id != taskDto.Id) return BadRequest("ID mismatch");
+        var existing = await _context.Tasks.FindAsync(id);
+        if (existing == null) return NotFound();
+
+        existing.Name = taskDto.Name;
+        existing.IsCompleted = taskDto.IsCompleted;
         await _context.SaveChangesAsync();
-        return NoContent(); // Status 204 - operacja udana, brak danych do odesłania
+        return NoContent();
     }
 
-    [HttpDelete("{id}")] // 5. Usuń(DELETE)
+    [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
         var task = await _context.Tasks.FindAsync(id);
