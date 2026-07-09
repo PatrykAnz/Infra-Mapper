@@ -4,7 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Infra_Mapper</RootNamespace>
+    <RootNamespace>InfraMapper</RootNamespace>
+    <AssemblyName>InfraMapper</AssemblyName>
     <!-- ./publish is a common -o output; exclude it so prior publish output is not globbed as project files (avoids publish/publish MSB3030). -->
     <DefaultItemExcludes>$(DefaultItemExcludes);publish/**</DefaultItemExcludes>
   </PropertyGroup>

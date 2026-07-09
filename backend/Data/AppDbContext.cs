@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using CloudBackend.Models;
+using InfraMapper.Models;
 
-namespace CloudBackend.Data;
+namespace InfraMapper.Data;
 
 public class AppDbContext : DbContext
 {
